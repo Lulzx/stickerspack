@@ -52,7 +52,7 @@ def downloadStickers(message):
     basePath = 'files/' + str(message.chat.id)
     if not os.path.exists(basePath):
         os.makedirs(basePath)
-    
+
     path = basePath + '/' + fileName
     if not os.path.exists(path):
         downloaded_file = bot.download_file(sticker.file_path)
@@ -73,7 +73,8 @@ def done(message):
         def checkZip():
             zipPath = basePath + '.zip'
             if os.path.exists(zipPath):
-                bot.send_message(message.chat.id, '<b>Congratulations! Your pack is ready, click "Manual"</b>', parse_mode='html')
+                bot.send_message(
+                    message.chat.id, '<b>Congratulations! Your pack is ready, follow the instructions from point 4.</b>', parse_mode='html')
                 bot.send_document(
                     message.chat.id, open(zipPath, 'rb'))
                 homeKeyboard(message)
@@ -84,12 +85,32 @@ def done(message):
 
 # ----------------------------------------------------------
 # Manual
-#TODO: Manual
+
 
 @bot.message_handler(func=lambda message: message.text == 'Manual')
 def manual(message):
     msg = '''
 <b>Manual</b>
+
+1. Click the "New pack" button.
+2. Add your favorite stickers.
+3. Click the "Done" button.
+4. Download the archive and unzip it. 
+    <b>
+    Now you can use stickers like pictures, 
+    or follow the instructions below to add 
+    them to Telegram.
+    </b>
+5. Go to the @Stickers bot.
+6. Select /newpack.
+7. Enter the name of the sticker set.
+8. Send the bot files from the archive 
+    as a document.
+9. Enter the smiley.
+10. Follow steps 8, 9 with all the files.
+11. Select /publish.
+12. Enter the name in Latin.
+13. Done!
     '''
     bot.send_message(message.chat.id, msg, parse_mode='html')
 
@@ -101,7 +122,10 @@ def commandStart(message):
     msg = '''
 <b>Welcome!</b>
 
-This bot makes a pack of stickers sent to it.
+This bot makes a pack of stickers sent to it or upload them as pictures.
+
+
+I do not know much English :(
     '''
     bot.send_message(message.chat.id, msg, parse_mode='html')
     homeKeyboard(message)

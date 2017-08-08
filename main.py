@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import config
 import telebot
-from telebot import types
 
 import os
 import shutil
 
+from telebot import types
 from timeout import timeout
 
 bot = telebot.TeleBot(config.token)

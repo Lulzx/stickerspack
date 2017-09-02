@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 import config
 import telebot
+import threading
 
 import os
 import shutil
 
 from telebot import types
-from timeout import timeout
 
 bot = telebot.TeleBot(config.token)
+
 
 # ----------------------------------------------------------
 # Home page
@@ -82,7 +83,7 @@ def done(message):
     basePath = 'files/' + str(message.chat.id)
     if os.path.exists(basePath):
         print("User {username}, created an archive.".format(
-                username=message.from_user.username))
+            username=message.from_user.username))
 
         shutil.make_archive(basePath, 'zip', basePath)
 
@@ -90,17 +91,22 @@ def done(message):
             zipPath = basePath + '.zip'
             if os.path.exists(zipPath):
                 bot.send_message(
-                    message.chat.id, '<b>Congratulations! Your pack is ready, follow the instructions from point 4.</b>', parse_mode='html')
+                    message.chat.id,
+                    '<b>Congratulations! Your pack is ready, follow the instructions from point 4.</b>',
+                    parse_mode='html')
                 bot.send_document(
                     message.chat.id, open(zipPath, 'rb'))
                 homeKeyboard(message)
-        timeout(checkZip, seconds=0.5)
+
+        sendZip = threading.Thread(target=checkZip)
+        sendZip.start()
     else:
         print("User {username}, tried create an archive without stickers.".format(
-                username=message.from_user.username))
+            username=message.from_user.username))
 
         bot.send_message(
             message.chat.id, '<b>Please add stickers!</b>', parse_mode='html')
+
 
 # ----------------------------------------------------------
 # Manual
@@ -135,6 +141,7 @@ def manual(message):
 13. Done!
     '''
     bot.send_message(message.chat.id, msg, parse_mode='html')
+
 
 # ----------------------------------------------------------
 
